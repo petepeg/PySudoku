@@ -1,5 +1,5 @@
 # Import Modules
-import os, pygame, copy
+import os, pygame, copy, time
 from pygame.locals import *
 from pygame.compat import geterror
 import sudokuSolver
@@ -22,6 +22,7 @@ test_array = [[0, 0, 0, 5, 7, 0, 8, 0, 9],
               [1, 3, 9, 6, 0, 0, 4, 0, 5],
               [7, 2, 0, 0, 0, 0, 0, 0, 8],
               [8, 0, 4, 0, 2, 1, 0, 0, 0]]
+
 ###############
 # Interaction #
 ###############
@@ -61,12 +62,14 @@ def locked_cells(board):
                 locked.append((y,x))
     return locked
 
+# Set everythign not locked to 0
 def reset_puzzle(board, locked):
     for i in range(9):
         for j in range(9):
             if (i,j) not in locked:
                 board[i][j] = 0
 
+# Run Solver and return a true or false, but not a solved puzzle
 def check_puzzle(board):
     for i in range(9):
         for j in range(9):
@@ -78,9 +81,6 @@ def check_puzzle(board):
             elif num == 0:
                 return False
     return True
-               
-
-
 
 ###################        
 # Draw the Screen #
@@ -107,6 +107,79 @@ def draw_menu():
     screen.blit(background, (0, 0))
     pygame.display.flip()
 
+def draw_victory(status):
+    # Create The Backgound
+    screen = pygame.display.set_mode((539, 539))
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((250, 250, 250))
+
+    # Draw Text
+    if pygame.font:
+        font = pygame.font.Font(None, 36)
+        y = 10
+        if status == True:
+            text = font.render("Victory", 1, (10, 10, 10))
+            background.blit(text, (10,25))
+        else:
+            text = font.render("Defeat", 1, (10, 10, 10))
+            background.blit(text, (10,25))
+            
+    
+    # Display The Background
+    screen.blit(background, (0, 0))
+    pygame.display.flip()
+    # Lazy way to get the text to breifly appear on screen
+    time.sleep(2)
+
+# Breifly show instructions
+def draw_inst():
+    # Create The Backgound
+    screen = pygame.display.set_mode((539, 539))
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((250, 250, 250))
+
+    # Draw Text
+    if pygame.font:
+        font = pygame.font.Font(None, 36)
+        inst = ["L/R cycles through numbers", "Esc for Menu"] 
+        y = 10
+        for i in inst:
+            text = font.render(i, 1, (10, 10, 10))
+            background.blit(text, (10,y))
+            y += 25
+    
+    # Display The Background
+    screen.blit(background, (0, 0))
+    pygame.display.flip()
+    # Lazy way to get the text to breifly appear on screen
+    time.sleep(2)
+
+def draw_solve(status):
+    # Create The Backgound
+    screen = pygame.display.set_mode((539, 539))
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((250, 250, 250))
+
+    # Draw Text
+    if pygame.font:
+        font = pygame.font.Font(None, 36)
+        y = 10
+        if status == True:
+            text = font.render("Solved", 1, (10, 10, 10))
+            background.blit(text, (10,25))
+        else:
+            text = font.render("Not solvable in current state", 1, (10, 10, 10))
+            background.blit(text, (10,25))
+    
+    # Display The Background
+    screen.blit(background, (0, 0))
+    pygame.display.flip()
+    # Lazy way to get the text to breifly appear on screen
+    time.sleep(2)
+
 # Print The board state
 def draw_board(board, locked):
     # Create The Backgound
@@ -128,6 +201,7 @@ def draw_board(board, locked):
         pygame.draw.line(background, (0,0,0,0), (loc,0), (loc,539), 1)
         pygame.draw.line(background, (0,0,0,0), (0,loc), (539,loc), 1)
 
+    # Draw the numbers, red for locked numbers, nothing if 0, black for user input numbers
     if pygame.font:
         font = pygame.font.Font(None, 36)
         y = 20
@@ -164,9 +238,14 @@ def main():
     solved = []
 
     # Main Loop
-    going = 2
+    going = 3
     while going != 0:
-        if going == 1:
+        
+        if going == 3:
+            draw_inst()
+            going = 2
+
+        elif going == 1:
             # Handle input events
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -179,21 +258,18 @@ def main():
                     solved = sudokuSolver.make_new_grid()
                     board = sudokuSolver.easy_puzzle(copy.deepcopy(solved))
                     locked = locked_cells(board)
-                    #sudokuSolver.print_puzzle(solved)
                     going = 2
                 # Medium
                 elif event.type == KEYDOWN and event.key == K_2:
                     solved = sudokuSolver.make_new_grid()
                     board = sudokuSolver.medium_puzzle(copy.deepcopy(solved))
                     locked = locked_cells(board)
-                    #sudokuSolver.print_puzzle(solved)
                     going = 2
                 # Hard
                 elif event.type == KEYDOWN and event.key == K_3:
                     solved = sudokuSolver.make_new_grid()
                     board = sudokuSolver.hard_puzzle(copy.deepcopy(solved))
                     locked = locked_cells(board)
-                    #sudokuSolver.print_puzzle(solved)
                     going = 2
                 # Blank
                 elif event.type == KEYDOWN and event.key == K_4:
@@ -202,7 +278,7 @@ def main():
                     going = 2
                 # Solve
                 elif event.type == KEYDOWN and event.key == K_5:
-                    sudokuSolver.solve_puzzle(board)
+                    draw_solve(sudokuSolver.solve_puzzle(board))
                     going = 2
                 # Reset
                 elif event.type == KEYDOWN and event.key == K_6:
@@ -211,6 +287,7 @@ def main():
                 # Check
                 elif event.type == KEYDOWN and event.key == K_7:
                     print(check_puzzle(board))
+                    draw_victory(check_puzzle(board))
                     going = 2
             draw_menu()
 

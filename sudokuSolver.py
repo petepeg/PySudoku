@@ -38,17 +38,22 @@ def find_empty_cell(grid, loc):
                 loc[1] = col
                 return True
     return False
+
 # Returns True if solved False if no solution found
 def solve_puzzle(grid):
     # Active location
+    # List is used here specifically to take advantage of mutable properties of lists in python and their leaky scope
     loc = [0,0]
+    
     # Look for an empty cell and set loc
     if find_empty_cell(grid,loc) == False:
         # No empty Cells, were done
         return True
+    
     # Set loc based on result of find_empty_cell
     row = loc[0]
     col = loc[1]
+    
     # Try and find a safe number
     for num in range(1,10):
         if is_safe(grid, num, row, col) == True:
@@ -59,9 +64,11 @@ def solve_puzzle(grid):
                 return True
             # bad guess reset to 0
             grid[row][col] = 0
+    
     # Backtrack
     return False
 
+# Helper for Cleaner Console Printing
 def print_puzzle(grid):
     print()
     for row in grid:
@@ -85,13 +92,15 @@ def random_list():
     r_list = [1,2,3,4,5,6,7,8,9]
     random.shuffle(r_list)
     return r_list
+
 ## Blank Grid
 def blank_grid():
     new_grid = [[0 for x in range(9)]for y in range(9)]
     return new_grid
+
 ## Create a valid random grid
 ## 30 was the fastest number of filled cells to gen a valid puzzle
-## But this was slow
+## But this was too slow
 def rand_grid():
     new_grid = blank_grid()
     row = random_loc()
@@ -148,14 +157,17 @@ def prune_grid(grid, n):
 def easy_puzzle(grid):
     easy = prune_grid(grid, 43)
     return easy
+
 ## Medium Puzzle
 def medium_puzzle(grid):
     medium = prune_grid(grid, 51)
     return medium
+
 ## Hard Puzzle
 def hard_puzzle(grid):
     hard = prune_grid(grid, 56)
     return hard
+
 ## Custom Puzzle
 def custom_puzzle(grid, n):
     custom = prune_grid(grid, n)
