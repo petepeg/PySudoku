@@ -59,7 +59,7 @@ def solve_puzzle(grid):
         if is_safe(grid, num, row, col) == True:
             # set grid at location to current guess
             grid[row][col] = num
-            # Recursivly step through the grid
+            # Recursively step through the grid
             if solve_puzzle(grid):
                 return True
             # bad guess reset to 0
@@ -115,8 +115,8 @@ def rand_grid():
         new_grid[row][col] = num
     return new_grid
 
-## Create a Valid grid with diaganol squares fileld in
-## Diag square are independant, this creates a puzzle with a higher chance of success
+## Create a Valid grid with diagonal squares filled in
+## Diag square are independent, this creates a puzzle with a higher chance of success
 def diag_rand_grid():
     new_grid = [[0 for x in range(9)]for y in range(9)]
     row = 0

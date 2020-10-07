@@ -62,7 +62,7 @@ def locked_cells(board):
                 locked.append((y,x))
     return locked
 
-# Set everythign not locked to 0
+# Set everything not locked to 0
 def reset_puzzle(board, locked):
     for i in range(9):
         for j in range(9):
@@ -87,7 +87,7 @@ def check_puzzle(board):
 ###################
 # Draw The Menu
 def draw_menu():
-    # Create The Backgound
+    # Create The Background
     screen = pygame.display.set_mode((539, 539))
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -108,7 +108,7 @@ def draw_menu():
     pygame.display.flip()
 
 def draw_victory(status):
-    # Create The Backgound
+    # Create The Background
     screen = pygame.display.set_mode((539, 539))
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -134,7 +134,7 @@ def draw_victory(status):
 
 # Breifly show instructions
 def draw_inst():
-    # Create The Backgound
+    # Create The Background
     screen = pygame.display.set_mode((539, 539))
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -157,7 +157,7 @@ def draw_inst():
     time.sleep(2)
 
 def draw_solve(status):
-    # Create The Backgound
+    # Create The Background
     screen = pygame.display.set_mode((539, 539))
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -182,7 +182,7 @@ def draw_solve(status):
 
 # Print The board state
 def draw_board(board, locked):
-    # Create The Backgound
+    # Create The Background
     screen = pygame.display.set_mode((539, 539))
     background = pygame.Surface(screen.get_size())
     background = background.convert()
